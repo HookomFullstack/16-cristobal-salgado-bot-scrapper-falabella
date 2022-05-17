@@ -4,6 +4,7 @@ const { addCategory } = require('./helpers/addCategory');
 const { saveExcel } = require('./helpers/saveExcel');
 const { objToString } = require('./helpers/objToString');
 const { stringToObj } = require('./helpers/stringToObj');
+const { url } = require('./settings');
 
 let category = [];
 let data     = [];
@@ -12,7 +13,6 @@ let page     = null;
 let browser  = null;
 let countPage = 0;
 
-let url = `https://www.falabella.com/falabella-cl/category/cat13550007/Ninos-y-Jugueteria`;
 const scrap = async (getNextPage) => {
     
     let count = 0;
@@ -87,6 +87,7 @@ const scrap = async (getNextPage) => {
                 const espectNameSelector         = await page2.$$('table > tbody > tr > td.property-name');
                 const breadcrumbSelector         = await page2.$('#breadcrumb > ol');
                 const brandSelector              = await page2.$('#pdp-product-brand-link');
+                
                 // Extract elements
                 const breadcrumb   = await page2.evaluate(element => element.innerText.replaceAll('\n', ' > '), breadcrumbSelector);
                 const title        = await page2.evaluate(element => element.innerText, titleSelector);
@@ -99,12 +100,9 @@ const scrap = async (getNextPage) => {
                 for (const iterator of typeDeliverySelector) typeDelivery.push(await page2.evaluate(element => element.innerText, iterator));
                 for (const iterator of espectNameSelector)   espectName.push(await page2.evaluate(element => element.innerText, iterator));
                 for (const iterator of espectValueSelector)  espectValue.push(await page2.evaluate(element => element.innerText, iterator));
-                if(imgSelector) {
-                for (const iterator of imgSelector)          img.push(await page2.evaluate(element => element.getAttribute('src'), iterator));
-                }
-                if(imgSelector2) {
-                    for (const iterator of imgSelector2)     img.push(await page2.evaluate(element => element.getAttribute('src'), iterator));
-                }
+                if(imgSelector ) for (const iterator of imgSelector ) img.push(await page2.evaluate(element => element.getAttribute('src'), iterator));
+                if(imgSelector2) for (const iterator of imgSelector2) img.push(await page2.evaluate(element => element.getAttribute('src'), iterator));
+                
                 // separate delivery
                 // convert array to string
                 typeDelivery = typeDelivery.join(' | ');
