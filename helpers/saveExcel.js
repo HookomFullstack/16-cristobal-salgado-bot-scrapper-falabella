@@ -29,7 +29,9 @@ const saveExcel = (data, category) => {
     
     workbook.xlsx.writeFile(fileName)
         .then(() => {
-            console.log('File saved');
+            // count the rows all
+            const rows = workbook.worksheets.reduce((acc, sheet) => acc + sheet.rowCount, 0);
+            console.log(`${fileName} creado exitosamente, hay ${rows} productos.`);
         }
     );
 }
